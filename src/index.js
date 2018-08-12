@@ -1,9 +1,3 @@
-const resizeCanvas = () => {
-  const canvas = document.querySelector('canvas')
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
-}
+import { autoResizeCanvas } from './canvas'
 
-resizeCanvas()
-
-window.addEventListener('resize', resizeCanvas, false)
+autoResizeCanvas()

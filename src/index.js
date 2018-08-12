@@ -1,7 +1,9 @@
-const component = () => {
-  const element = document.createElement('div')
-  element.innerHTML = 'Hello Webpack'
-  return element
+const resizeCanvas = () => {
+  const canvas = document.querySelector('canvas')
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
 }
 
-document.body.appendChild(component())
+resizeCanvas()
+
+window.addEventListener('resize', resizeCanvas, false)

@@ -1,4 +1,5 @@
 import { autoResizeCanvas, clear, ctx } from './canvas'
+import * as V from './vector'
 
 autoResizeCanvas()
 
@@ -8,28 +9,29 @@ const gravity = 1
 const atGround = yPos => yPos >= innerHeight
 
 const update = shape => {
-  const { x, y, speedX, speedY, radius } = shape
+  const { pos, velocity, radius } = shape
 
-  const nextX = x + speedX
-  const nextY = y + speedY + gravity
+  const nextPos = V.create(
+    pos.x + velocity.x,
+    pos.y + velocity.y + gravity
+  )
 
-
-  const newSpeedX = speedX
-  // NOTE(adam): bounce off of ground with drag
-  const newSpeedY =  atGround(nextY + radius)
-    ? -speedY * drag
-    : speedY + gravity
+  const newVelocity = V.create(
+    velocity.x,
+    // NOTE(adam): bounce off of ground with drag
+    atGround(nextPos.y + radius)
+        ? -velocity.y * drag
+        : velocity.y + gravity
+  )
 
   return {
     ...shape,
-    x: x + newSpeedX,
-    y: y + newSpeedY,
-    speedX: newSpeedX,
-    speedY: newSpeedY,
+    pos: V.add(pos, newVelocity),
+    velocity: newVelocity,
   }
 }
 
-const render = ({ x, y, radius, color }) => {
+const render = ({ pos: { x, y }, radius, color }) => {
   ctx.beginPath()
   ctx.arc(x, y, radius, 0, Math.PI * 2)
   ctx.fillStyle = color
@@ -50,10 +52,8 @@ const renderLoop = (shapes) => {
 
 const initShapes = [
   {
-    x: 200,
-    y: 200,
-    speedX: 0,
-    speedY: 0,
+    pos: V.create(200, 200),
+    velocity: V.create(),
     color: 'blue',
     radius: 50,
   },

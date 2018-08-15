@@ -3,7 +3,7 @@ import * as V from './vector'
 
 autoResizeCanvas()
 
-const drag = 0.8
+const reboundScale = 0.8
 const gravity = 1
 
 const atGround = yPos => yPos >= height()
@@ -18,10 +18,9 @@ const update = shape => {
 
   const newVelocity = V.create(
     velocity.x,
-    // NOTE(adam): bounce off of ground with drag
     atGround(nextPos.y + radius)
-        ? -velocity.y * drag
-        : velocity.y + gravity
+      ? -velocity.y * reboundScale
+      : velocity.y + gravity
   )
 
   return {

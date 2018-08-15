@@ -1,62 +1,44 @@
 import { autoResizeCanvas, clear, context, height } from './canvas'
 import * as V from './vector'
+import * as Circle from './circle';
+import * as Entity from './entity';
 
 autoResizeCanvas()
 
-const reboundScale = 0.8
-const gravity = 1
 
-const atGround = yPos => yPos >= height()
+const update = Circle.update
 
-const update = shape => {
-  const { pos, velocity, radius } = shape
-
-  const nextPos = V.create(
-    pos.x + velocity.x,
-    pos.y + velocity.y + gravity
-  )
-
-  const newVelocity = V.create(
-    velocity.x,
-    atGround(nextPos.y + radius)
-      ? -velocity.y * reboundScale
-      : velocity.y + gravity
-  )
-
-  return {
-    ...shape,
-    pos: V.add(pos, newVelocity),
-    velocity: newVelocity,
-  }
-}
-
-const render = ({ pos: { x, y }, radius, color }) => {
+const render = entity => {
   const ctx = context()
   ctx.beginPath()
-  ctx.arc(x, y, radius, 0, Math.PI * 2)
-  ctx.fillStyle = color
-  ctx.fill()
-  ctx.closePath
+  Circle.render(entity, ctx)
+  ctx.closePath()
+
+  return entity
 }
 
-const animate = (shapes) =>
-  shapes
+const animate = entities =>
+  entities
     .map(update)
-    .map(s => render(s) || s)
+    .map(render)
 
-const renderLoop = (shapes) => {
+const renderLoop = entities => {
   clear()
-  const updatedShapes = animate(shapes)
-  requestAnimationFrame(() => renderLoop(updatedShapes))
+  const updated = animate(entities)
+  requestAnimationFrame(() => renderLoop(updated))
 }
 
 const initShapes = [
-  {
-    pos: V.create(200, 200),
-    velocity: V.create(),
-    color: 'blue',
-    radius: 50,
-  },
+  Entity.create(
+    {
+      color: 'blue',
+      radius: 50,
+    },
+    {
+      pos: V.create(200, 200),
+      velocity: V.create(),
+    },
+  )
 ]
 
 renderLoop(initShapes)

@@ -12,5 +12,8 @@
 
 
 export const create = (x = 0, y = 0) => ({ x, y })
+
 export const add = ({ x: x1, y: y1 }, { x: x2, y: y2 }) =>
   create(x1 + x2, y1 + y2)
+
+export const scale = ({ x, y }, s) => create(x * s, y * s)

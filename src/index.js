@@ -1,4 +1,4 @@
-import { autoResizeCanvas, clear, ctx } from './canvas'
+import { autoResizeCanvas, clear, context, height } from './canvas'
 import * as V from './vector'
 
 autoResizeCanvas()
@@ -6,7 +6,7 @@ autoResizeCanvas()
 const drag = 0.8
 const gravity = 1
 
-const atGround = yPos => yPos >= innerHeight
+const atGround = yPos => yPos >= height()
 
 const update = shape => {
   const { pos, velocity, radius } = shape
@@ -32,6 +32,7 @@ const update = shape => {
 }
 
 const render = ({ pos: { x, y }, radius, color }) => {
+  const ctx = context()
   ctx.beginPath()
   ctx.arc(x, y, radius, 0, Math.PI * 2)
   ctx.fillStyle = color

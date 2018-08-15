@@ -1,6 +1,9 @@
 const canvas = document.querySelector('canvas')
+const ctx = canvas.getContext('2d')
 
-export const ctx = canvas.getContext('2d')
+export const context = () => ctx
+export const width = () => canvas.width
+export const height = () => canvas.height
 
 export const resize = (width, height) => {
   canvas.width = width

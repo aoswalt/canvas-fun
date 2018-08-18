@@ -2,11 +2,15 @@ import * as Circle from './circle'
 import * as Entity from './entity'
 import * as V from './vector'
 import { autoResizeCanvas, clear, context } from './canvas'
+import pipe from './pipe'
 
 autoResizeCanvas()
 
-
-const update = e => e.update(e)
+const update = entity =>
+  pipe(entity)
+    .p(e => e.update(e))
+    .p(Entity.update)
+    .value()
 
 const render = entity => {
   const ctx = context()

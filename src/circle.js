@@ -1,15 +1,12 @@
 import * as V from './vector'
-import { height } from './canvas';
+import { height } from './canvas'
 
 const reboundScale = 0.8
 const gravity = 1
 
 const atGround = yPos => yPos >= height()
 
-export const create = (color, radius) => ({
-  color,
-  radius
-})
+export const create = (color, radius) => ({ color, radius })
 
 export const update = ({ pos, velocity, data, data: { radius }, ...rest }) => {
   const nextPos = V.create(

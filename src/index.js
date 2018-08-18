@@ -30,13 +30,9 @@ const renderLoop = entities => {
 
 const initShapes = [
   Entity.create(
-    {
-      color: 'blue',
-      radius: 50,
-    },
+    Circle.create('blue', 50),
     {
       pos: V.create(200, 200),
-      velocity: V.create(),
       update: Circle.update,
       render: Circle.render,
     },

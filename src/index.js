@@ -1,17 +1,17 @@
-import { autoResizeCanvas, clear, context, height } from './canvas'
+import * as Circle from './circle'
+import * as Entity from './entity'
 import * as V from './vector'
-import * as Circle from './circle';
-import * as Entity from './entity';
+import { autoResizeCanvas, clear, context } from './canvas'
 
 autoResizeCanvas()
 
 
-const update = Circle.update
+const update = e => e.update(e)
 
 const render = entity => {
   const ctx = context()
   ctx.beginPath()
-  Circle.render(entity, ctx)
+  entity.render(entity, ctx)
   ctx.closePath()
 
   return entity
@@ -37,8 +37,10 @@ const initShapes = [
     {
       pos: V.create(200, 200),
       velocity: V.create(),
+      update: Circle.update,
+      render: Circle.render,
     },
-  )
+  ),
 ]
 
 renderLoop(initShapes)

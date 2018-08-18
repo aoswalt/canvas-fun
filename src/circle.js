@@ -11,7 +11,7 @@ export const create = (color, radius) => ({
   radius
 })
 
-export const update = ({ pos, velocity, data, data: { radius } }) => {
+export const update = ({ pos, velocity, data, data: { radius }, ...rest }) => {
   const nextPos = V.create(
     pos.x + velocity.x,
     pos.y + velocity.y + gravity
@@ -28,6 +28,7 @@ export const update = ({ pos, velocity, data, data: { radius } }) => {
     data,
     pos: V.add(pos, newVelocity),
     velocity: newVelocity,
+    ...rest,
   }
 }
 

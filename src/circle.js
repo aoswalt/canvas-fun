@@ -5,6 +5,7 @@ const reboundScale = 0.8
 const gravity = 1
 
 const atGround = yPos => yPos >= height()
+const belowGround = yPos => yPos > height()
 
 export const create = (color, radius) => ({ color, radius })
 
@@ -21,9 +22,16 @@ export const update = ({ pos, velocity, data, data: { radius }, ...rest }) => {
       : velocity.y + gravity
   )
 
+  const updatedPos = V.add(pos, newVelocity)
+
+  const newPos =
+    belowGround(updatedPos.y + radius)
+      ? V.create(updatedPos.x, height() - radius)
+      : updatedPos
+
   return {
     data,
-    pos: V.add(pos, newVelocity),
+    pos: newPos,
     velocity: newVelocity,
     ...rest,
   }

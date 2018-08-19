@@ -29,12 +29,10 @@ const rebound = c => {
 }
 
 const keepInBounds = c => {
-  const {
-    pos,
-    data: { radius },
-  } = c
-  const newPos = atGround(c) ? V.create(pos.x, height() - radius) : pos
-  return { ...c, pos: newPos }
+  const { pos, velocity, data: { radius } } = c
+  const newPos = belowGround(c) ? V.create(pos.x, height() - radius) : pos
+  const newVelocity = belowGround(c) ? V.create(velocity.x, 0) : velocity
+  return { ...c, pos: newPos, velocity: newVelocity }
 }
 
 const circleUpdate = circle =>
@@ -46,10 +44,7 @@ const circleUpdate = circle =>
     .value()
 
 const circleRender = (entity, ctx) => {
-  const {
-    pos: { x, y },
-    data: { radius, color },
-  } = entity
+  const { pos: { x, y }, data: { radius, color } } = entity
 
   ctx.arc(x, y, radius, 0, Math.PI * 2)
   ctx.fillStyle = color

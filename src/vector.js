@@ -12,8 +12,8 @@
 
 const create = (x = 0, y = 0) => ({ x, y })
 
-const add = ({ x: x1, y: y1 }, { x: x2, y: y2 }) =>
-  create(x1 + x2, y1 + y2)
+const add = (...vs) =>
+  vs.reduce(({ x: x1, y: y1 }, { x: x2, y: y2 }) => create(x1 + x2, y1 + y2))
 
 const scale = ({ x, y }, s) => create(x * s, y * s)
 
@@ -23,9 +23,4 @@ const Vector = {
   scale,
 }
 
-export {
-  Vector as default,
-  add,
-  create,
-  scale,
-}
+export { Vector as default, add, create, scale }

@@ -3,46 +3,53 @@ import V from './vector'
 import { height } from './canvas'
 import pipe from './pipe'
 
-const reboundScale = 0.8
+const inertiaLoss = 0.8
 const gravity = 1
 const gravityV = V.create(0, gravity)
 
-const atGround = yPos => yPos >= height()
-const belowGround = yPos => yPos > height()
+const atGround = ({ pos: { y }, data: { radius } }) => y + radius >= height()
+const belowGround = ({ pos: { y }, data: { radius } }) => y + radius > height()
 
 const moveStep = c => ({ ...c, pos: V.add(c.pos, c.velocity) })
 
-const accelerate = c => ({ ...c, velocity: V.add(c.velocity, gravityV) })
+const accelerate = c => {
+  const { velocity } = c
+  const newVelocity = atGround(c) ? velocity : V.add(velocity, gravityV)
+  return { ...c, velocity: newVelocity }
+}
 
 const rebound = c => {
-  const { pos, velocity, data: { radius } } = c
+  const { pos, velocity } = c
+  const nextCircle = { ...c, pos: V.add(pos, velocity) }
   const newVelocity = V.create(
     velocity.x,
-    atGround(pos.y + radius)
-      ? -velocity.y * reboundScale
-      : velocity.y
+    atGround(nextCircle) ? -velocity.y * inertiaLoss : velocity.y + gravity
   )
   return { ...c, velocity: newVelocity }
 }
 
 const keepInBounds = c => {
-  const { pos, data: { radius } } = c
-  const newPos = atGround(pos.y + radius)
-    ? V.create(pos.x, height() - radius)
-    : pos
+  const {
+    pos,
+    data: { radius },
+  } = c
+  const newPos = atGround(c) ? V.create(pos.x, height() - radius) : pos
   return { ...c, pos: newPos }
 }
 
 const circleUpdate = circle =>
   pipe(circle)
     .p(moveStep)
-    .p(accelerate)
+    // .p(accelerate)
     .p(rebound)
     .p(keepInBounds)
     .value()
 
 const circleRender = (entity, ctx) => {
-  const { pos: { x, y }, data: { radius, color } } = entity
+  const {
+    pos: { x, y },
+    data: { radius, color },
+  } = entity
 
   ctx.arc(x, y, radius, 0, Math.PI * 2)
   ctx.fillStyle = color

@@ -6,7 +6,10 @@ import V from './vector'
 autoResizeCanvas()
 
 const animate = entities =>
-  entities.map(Entity.update).map(Entity.render(context()))
+  entities
+    .filter(e => e.age)
+    .map(Entity.update)
+    .map(Entity.render(context()))
 
 const renderLoop = entities => {
   clear()

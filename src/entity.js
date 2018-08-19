@@ -24,7 +24,7 @@ const create = (
     update = entityUpdate,
     render,
   } = {}
-) => ({ pos, velocity, data, update, render, age: 0 })
+) => ({ pos, velocity, data, update, render, age: 1 })
 
 const Entity = {
   create,

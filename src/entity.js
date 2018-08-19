@@ -1,6 +1,20 @@
-import * as V from './vector'
+import V from './vector'
+import pipe from './pipe'
 
-const entityUpdate = e => ({ ...e, age: e.age + 1 })
+const entityUpdate = entity =>
+  pipe(entity)
+    .p(e => e.update(e))
+    .p(e => ({ ...e, age: e.age + 1 }))
+    .value()
+
+const entityRender = ctx => entity => {
+  ctx.beginPath()
+  entity.render(entity, ctx)
+  ctx.closePath()
+  ctx.globalAlpha = 1
+
+  return entity
+}
 
 const create = (
   data,
@@ -9,12 +23,18 @@ const create = (
     velocity = V.create(),
     update = entityUpdate,
     render,
-  } = {},
-  age = 0
-) =>
-  ({ pos, velocity, data, update, render, age })
+  } = {}
+) => ({ pos, velocity, data, update, render, age: 0 })
+
+const Entity = {
+  create,
+  update: entityUpdate,
+  render: entityRender,
+}
 
 export {
+  Entity as default,
   create,
   entityUpdate as update,
+  entityRender as render
 }

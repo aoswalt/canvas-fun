@@ -1,30 +1,12 @@
-import * as Circle from './circle'
-import * as Entity from './entity'
-import * as V from './vector'
 import { autoResizeCanvas, clear, context } from './canvas'
-import pipe from './pipe'
+import Circle from './circle'
+import Entity from './entity'
+import V from './vector'
 
 autoResizeCanvas()
 
-const update = entity =>
-  pipe(entity)
-    .p(e => e.update(e))
-    .p(Entity.update)
-    .value()
-
-const render = entity => {
-  const ctx = context()
-  ctx.beginPath()
-  entity.render(entity, ctx)
-  ctx.closePath()
-
-  return entity
-}
-
 const animate = entities =>
-  entities
-    .map(update)
-    .map(render)
+  entities.map(Entity.update).map(Entity.render(context()))
 
 const renderLoop = entities => {
   clear()
@@ -32,15 +14,6 @@ const renderLoop = entities => {
   requestAnimationFrame(() => renderLoop(updated))
 }
 
-const initShapes = [
-  Entity.create(
-    Circle.create('blue', 50),
-    {
-      pos: V.create(200, 200),
-      update: Circle.update,
-      render: Circle.render,
-    },
-  ),
-]
+const initShapes = [Circle.create('blue', 50, { pos: V.create(200, 200) })]
 
 renderLoop(initShapes)

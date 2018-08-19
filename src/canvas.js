@@ -5,9 +5,9 @@ export const context = () => ctx
 export const width = () => canvas.width
 export const height = () => canvas.height
 
-export const resize = (width, height) => {
-  canvas.width = width
-  canvas.height = height
+export const resize = (newWidth, newHeight) => {
+  canvas.width = newWidth
+  canvas.height = newHeight
 }
 
 export const clear = () => {

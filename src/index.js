@@ -1,7 +1,7 @@
+import * as V from './vector'
 import { autoResizeCanvas, clear, context } from './canvas'
 import Circle from './circle'
 import Entity from './entity'
-import V from './vector'
 
 autoResizeCanvas()
 
@@ -17,6 +17,6 @@ const renderLoop = entities => {
   requestAnimationFrame(() => renderLoop(updated))
 }
 
-const initShapes = [Circle.create('blue', 50, { pos: V.create(200, 200) })]
+const initShapes = [Circle.create('blue', 50, { position: V.create(200, 200) })]
 
 renderLoop(initShapes)

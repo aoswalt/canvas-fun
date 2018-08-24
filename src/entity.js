@@ -1,4 +1,4 @@
-import V from './vector'
+import * as V from './vector'
 import pipe from './pipe'
 
 const entityUpdate = entity =>
@@ -16,15 +16,17 @@ const entityRender = ctx => entity => {
   return entity
 }
 
-const create = (
-  data,
-  {
-    pos = V.create(),
-    velocity = V.create(),
-    update = entityUpdate,
-    render,
-  } = {}
-) => ({ pos, velocity, data, update, render, age: 1 })
+const create = (data, props = {}) => {
+  const defaults = {
+    position: V.create(),
+    velocity: V.create(),
+    acceleration: V.create(),
+    update: entityUpdate,
+    age: 1,
+  }
+
+  return { ...defaults, ...props, data }
+}
 
 const Entity = {
   create,

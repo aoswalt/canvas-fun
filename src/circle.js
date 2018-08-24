@@ -1,50 +1,56 @@
+import * as V from './vector'
 import Entity from './entity'
-import V from './vector'
 import { height } from './canvas'
 import pipe from './pipe'
+
+const atGround = ({ position: { y }, data: { radius } }) =>
+  y + radius >= height()
 
 const inertiaLoss = 0.8
 const gravity = 1
 const gravityV = V.create(0, gravity)
 
-const atGround = ({ pos: { y }, data: { radius } }) => y + radius >= height()
-const belowGround = ({ pos: { y }, data: { radius } }) => y + radius > height()
+/*
+ * apply force => acc += force
+ *
+ * vel += acc
+ * pos += vel
+ * acc = 0
+ */
 
-const moveStep = c => ({ ...c, pos: V.add(c.pos, c.velocity) })
+const resetAcceleration = v => ({ ...v, acceleration: V.create() })
 
-const accelerate = c => {
-  const { velocity } = c
-  const newVelocity = atGround(c) ? velocity : V.add(velocity, gravityV)
-  return { ...c, velocity: newVelocity }
-}
+const applyForce = f => c => ({ ...c, acceleration: V.add(c.acceleration, f) })
 
-const rebound = c => {
-  const { pos, velocity } = c
-  const nextCircle = { ...c, pos: V.add(pos, velocity) }
-  const newVelocity = V.create(
-    velocity.x,
-    atGround(nextCircle) ? -velocity.y * inertiaLoss : velocity.y + gravity
-  )
-  return { ...c, velocity: newVelocity }
-}
+const accelerate = c => ({ ...c, velocity: V.add(c.velocity, c.acceleration) })
 
-const keepInBounds = c => {
-  const { pos, velocity, data: { radius } } = c
-  const newPos = belowGround(c) ? V.create(pos.x, height() - radius) : pos
-  const newVelocity = belowGround(c) ? V.create(velocity.x, 0) : velocity
-  return { ...c, pos: newPos, velocity: newVelocity }
-}
+const move = c => ({ ...c, position: V.add(c.position, c.velocity) })
+
+const fall = applyForce(gravityV)
+
+const bounce = c =>
+  atGround(c)
+    ? {
+      ...c,
+      velocity: V.scale(c.velocity, -inertiaLoss),
+      position: V.create(c.position.x, height() - c.data.radius),
+    }
+    : c
 
 const circleUpdate = circle =>
   pipe(circle)
-    .p(moveStep)
-    // .p(accelerate)
-    .p(rebound)
-    .p(keepInBounds)
+    .p(fall)
+    .p(accelerate)
+    .p(move)
+    .p(bounce)
+    .p(resetAcceleration)
     .value()
 
 const circleRender = (entity, ctx) => {
-  const { pos: { x, y }, data: { radius, color } } = entity
+  const {
+    position: { x, y },
+    data: { radius, color },
+  } = entity
 
   ctx.arc(x, y, radius, 0, Math.PI * 2)
   ctx.fillStyle = color
@@ -56,16 +62,18 @@ const create = (
   color,
   radius,
   {
-    pos = V.create(),
+    position = V.create(),
     velocity = V.create(),
+    acceleration = V.create(),
     update = circleUpdate,
     render = circleRender,
     ...rest
   } = {}
 ) =>
   Entity.create(createData(color, radius), {
-    pos,
+    position,
     velocity,
+    acceleration,
     update,
     render,
     ...rest,

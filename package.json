@@ -2,9 +2,10 @@
   "name": "canvas-fun",
   "version": "1.0.0",
   "description": "",
+  "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --open",
+    "start": "webpack-dev-server --mode development",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack"
   },
@@ -12,8 +13,8 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "webpack": "^4.16.5",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5"
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0",
+    "webpack-dev-server": "^3.1.14"
   }
 }

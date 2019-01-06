@@ -2,6 +2,7 @@ import * as V from './vector'
 import Entity from './entity'
 import { height } from './canvas'
 import pipe from './pipe'
+import { circle as drawCircle } from './draw'
 
 const atGround = ({ position: { y }, data: { radius } }) =>
   y + radius >= height()
@@ -31,10 +32,10 @@ const fall = applyForce(gravityV)
 const bounce = c =>
   atGround(c)
     ? {
-      ...c,
-      velocity: V.scale(c.velocity, -inertiaLoss),
-      position: V.create(c.position.x, height() - c.data.radius),
-    }
+        ...c,
+        velocity: V.scale(c.velocity, -inertiaLoss),
+        position: V.create(c.position.x, height() - c.data.radius),
+      }
     : c
 
 const circleUpdate = circle =>
@@ -46,15 +47,13 @@ const circleUpdate = circle =>
     .p(resetAcceleration)
     .value()
 
-const circleRender = (entity, ctx) => {
+const circleRender = entity => {
   const {
-    position: { x, y },
+    position,
     data: { radius, color },
   } = entity
 
-  ctx.arc(x, y, radius, 0, Math.PI * 2)
-  ctx.fillStyle = color
-  ctx.fill()
+  drawCircle(position, radius, { fill: color })
 }
 
 const createData = (color, radius) => ({ color, radius })
@@ -68,7 +67,7 @@ const create = (
     update = circleUpdate,
     render = circleRender,
     ...rest
-  } = {}
+  } = {},
 ) =>
   Entity.create(createData(color, radius), {
     position,
@@ -91,5 +90,5 @@ export {
   createData,
   create,
   circleUpdate as update,
-  circleRender as render
+  circleRender as render,
 }

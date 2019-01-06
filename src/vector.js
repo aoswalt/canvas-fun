@@ -15,10 +15,16 @@ import pipe from './pipe'
 const create = (x = 0, y = 0) => ({ x, y })
 
 const add = (...vs) =>
-  vs.reduce(({ x: x1, y: y1 }, { x: x2, y: y2 }) => create(x1 + x2, y1 + y2))
+  vs.reduce(
+    ({ x: x1, y: y1 }, { x: x2, y: y2 }) => create(x1 + x2, y1 + y2),
+    create(),
+  )
 
 const subtract = (...vs) =>
-  vs.reduce(({ x: x1, y: y1 }, { x: x2, y: y2 }) => create(x1 - x2, y1 - y2))
+  vs.reduce(
+    ({ x: x1, y: y1 }, { x: x2, y: y2 }) => create(x1 - x2, y1 - y2),
+    create(),
+  )
 
 const magnitudeSq = ({ x, y }) => x ** 2 + y ** 2
 
@@ -50,7 +56,7 @@ const V = {
   normal,
   scale,
   scaleMagTo,
-  subtract
+  subtract,
 }
 
 export {
@@ -62,5 +68,5 @@ export {
   normal,
   scale,
   scaleMagTo,
-  subtract
+  subtract,
 }

@@ -1,23 +1,34 @@
-import * as V from './vector'
+import Entity from './Entity'
+import Vector from './Vector'
 import { autoResizeCanvas, clear } from './canvas'
-import Circle from './circle'
-import Entity from './entity'
+import Ball from './Ball'
 import { circle } from './draw'
 
 autoResizeCanvas()
 
 const animate = entities =>
   entities
-    .filter(e => e.age)
-    .map(Entity.update)
-    .map(Entity.render)
+    // .filter(e => e.age)
+    .map(e => e.update(e))
+    .map(e => e.draw(e))
 
-const renderLoop = entities => {
-  clear()
-  const updated = animate(entities)
-  requestAnimationFrame(() => renderLoop(updated))
+const draw = () => {
+  circle({ x: 100, y: 400 }, 30)
 }
 
-const initShapes = [Circle.create('blue', 50, { position: V.create(200, 200) })]
+const drawLoop = entities => {
+  clear()
+  const updated = animate(entities)
+  draw()
+  requestAnimationFrame(() => drawLoop(updated))
+}
 
-renderLoop(initShapes)
+const initShapes = [
+  new Ball({
+    color: 'blue',
+    radius: 50,
+    entity: new Entity({ position: new Vector(200, 200) }),
+  }),
+]
+
+drawLoop(initShapes)

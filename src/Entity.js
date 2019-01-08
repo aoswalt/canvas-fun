@@ -1,5 +1,4 @@
 import Vector from './Vector'
-import pipe from './pipe'
 
 /*
  * apply force => acc += force
@@ -13,13 +12,11 @@ export default class Entity {
   constructor({
     position = new Vector(),
     velocity = new Vector(),
-    acceleration = new Vector(),
     forces = [],
     age = 1,
   } = {}) {
     this.position = position
     this.velocity = velocity
-    this.acceleration = acceleration
     this.forces = forces
     this.age = age
   }
@@ -31,37 +28,15 @@ Entity.applyForce = force => entity =>
     forces: [...entity.forces, force],
   })
 
-Entity.sumForces = entity =>
-  new Entity({
-    ...entity,
-    acceleration: Vector.add(...entity.forces),
+Entity.update = ({ position, velocity, forces, age }) => {
+  // current velocity + net force
+  const newVelocity = Vector.add(velocity, ...forces)
+  const newPosition = Vector.add(position, newVelocity)
+
+  return new Entity({
+    position: newPosition,
+    velocity: newVelocity,
+    forces: [],
+    age: age + 1,
   })
-
-Entity.accelerate = entity =>
-  new Entity({
-    ...entity,
-    velocity: Vector.add(entity.velocity, entity.acceleration),
-  })
-
-Entity.move = entity =>
-  new Entity({
-    ...entity,
-    position: Vector.add(entity.position, entity.velocity),
-  })
-
-Entity.resetAcceleration = entity =>
-  new Entity({ ...entity, acceleration: new Vector() })
-
-Entity.resetForces = entity => new Entity({ ...entity, forces: [] })
-
-const getOlder = entity => new Entity({ ...entity, age: entity.age + 1 })
-
-Entity.update = entity =>
-  pipe(entity)
-    .p(Entity.sumForces)
-    .p(Entity.accelerate)
-    .p(Entity.resetAcceleration)
-    .p(Entity.resetForces)
-    .p(Entity.move)
-    .p(getOlder)
-    .value()
+}

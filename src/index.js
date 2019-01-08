@@ -1,25 +1,19 @@
+import Ball from './Ball'
 import Entity from './Entity'
 import Vector from './Vector'
 import { autoResizeCanvas, clear } from './canvas'
-import Ball from './Ball'
-import { circle } from './draw'
 
 autoResizeCanvas()
 
 const animate = entities =>
   entities
-    // .filter(e => e.age)
+    .filter(e => !e.isAlive || e.isAlive(e))
     .map(e => e.update(e))
     .map(e => e.draw(e))
-
-const draw = () => {
-  circle({ x: 100, y: 400 }, 30)
-}
 
 const drawLoop = entities => {
   clear()
   const updated = animate(entities)
-  draw()
   requestAnimationFrame(() => drawLoop(updated))
 }
 

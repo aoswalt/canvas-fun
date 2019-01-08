@@ -1,9 +1,7 @@
 import Ball from './Ball'
 import Entity from './Entity'
 import Vector from './Vector'
-import { autoResizeCanvas, clear } from './canvas'
-
-autoResizeCanvas()
+import { clear } from './canvas'
 
 const animate = entities =>
   entities

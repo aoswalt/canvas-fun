@@ -20,7 +20,6 @@ export const clear = () => {
 const makeFullscreen = () =>
   resize(window.innerWidth, window.innerHeight)
 
-export const autoResizeCanvas = () => {
-  makeFullscreen()
-  window.addEventListener('resize', makeFullscreen)
-}
+// keep canvas fullscreen
+makeFullscreen()
+window.addEventListener('resize', makeFullscreen)

@@ -23,7 +23,7 @@ const inertiaLoss = 0.8
 const gravity = new Vector(0, 1)
 
 const fall = ball =>
-  new Ball({ ...ball, entity: Entity.applyForce(gravity)(ball.entity) })
+  new Ball({ ...ball, entity: Entity.applyForce(ball.entity, gravity) })
 
 const bounce = ball =>
   atGround(ball)

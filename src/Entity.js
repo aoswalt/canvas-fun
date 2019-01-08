@@ -22,7 +22,7 @@ export default class Entity {
   }
 }
 
-Entity.applyForce = force => entity =>
+Entity.applyForce = (entity, force) =>
   new Entity({
     ...entity,
     forces: [...entity.forces, force],

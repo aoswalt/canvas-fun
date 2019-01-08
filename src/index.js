@@ -6,7 +6,7 @@ import { clear } from './canvas'
 const animate = entities =>
   entities
     .filter(e => !e.isAlive || e.isAlive(e))
-    .map(e => e.update(e))
+    .map(e => e.update(e)) // should be a fixed physics loop
     .map(e => e.draw(e))
 
 const drawLoop = entities => {

@@ -1,4 +1,6 @@
 const canvas = document.querySelector('canvas')
+canvas.focus()
+
 const ctx = canvas.getContext('2d')
 
 export const canvasElement = () => canvas

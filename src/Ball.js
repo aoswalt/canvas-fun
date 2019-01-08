@@ -3,6 +3,8 @@ import Entity from './Entity'
 import { height } from './canvas'
 import pipe from './pipe'
 import { circle } from './draw'
+import { mouseDown, position as mousePosition } from './mouse'
+import { anyKeysDown, SPACE, SHIFT } from './keys';
 
 export default class Ball {
   constructor({ color = 'blue', radius = 10, entity = new Entity() } = {}) {
@@ -37,10 +39,33 @@ const bounce = ball =>
       })
     : ball
 
+const raise = ball =>
+  anyKeysDown(SPACE, SHIFT)
+    ? new Ball({
+        ...ball,
+        entity: Entity.applyForce(ball.entity, new Vector(0, -1.5)),
+      })
+    : ball
+
+const place = ball =>
+  mouseDown()
+    ? new Ball({
+        ...ball,
+        entity: new Entity({
+          ...ball.entity,
+          position: mousePosition(),
+          forces: [],
+          velocity: new Vector(),
+        }),
+      })
+    : ball
+
 Ball.update = ball =>
   pipe(ball)
     .p(fall)
     .p(bounce)
+    .p(raise)
+    .p(place)
     .p(b => new Ball({ ...b, entity: Entity.update(b.entity) }))
     .value()
 Ball.prototype.update = Ball.update

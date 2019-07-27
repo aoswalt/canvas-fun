@@ -4,9 +4,17 @@ import { allocate, initAllocator, initArray, set } from './generationalIndexing'
 const structure = {
   allocator: initAllocator(),
   entities: [], // gi
+
+  position: initArray(), // x, y
+  body: initArray(), // type, <any>?
+  display: initArray(), // color
 }
 
-const ball = {}
+const ball = {
+  position: new Vector(200, 200),
+  body: { type: 'circle', radius: 50 },
+  display: { color: 'blue' },
+}
 
 const spawn = (world, skeleton) => {
   const [genIndex, allocator] = allocate(world.allocator)

@@ -8,6 +8,7 @@ const structure = {
   position: initArray(), // x, y
   velocity: initArray(), // x, y
   body: initArray(), // type, <any>?
+  gravity: initArray(), // float
   forces: initArray(), // [{ x, y }]
   display: initArray(), // color
 }
@@ -16,6 +17,7 @@ const ball = {
   position: new Vector(200, 200),
   velocity: new Vector(),
   body: { type: 'circle', radius: 50 },
+  gravity: 1,
   forces: [],
   display: { color: 'blue' },
 }

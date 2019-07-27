@@ -9,17 +9,17 @@ export default class Vector {
 
 Vector.add = (...vs) =>
   vs.reduce(
-    ({ x: x1, y: y1 }, { x: x2, y: y2 }) => new Vector(x1 + x2, y1 + y2),
+    (v1, v2) => new Vector(v1.x + v2.x, v1.y + v2.y),
     new Vector(),
   )
 
 Vector.subtract = (...vs) =>
   vs.reduce(
-    ({ x: x1, y: y1 }, { x: x2, y: y2 }) => new Vector(x1 - x2, y1 - y2),
+    (v1, v2) => new Vector(v1.x - v2.x, v1.y - v2.y),
     new Vector(),
   )
 
-Vector.magnitudeSq = ({ x, y }) => x ** 2 + y ** 2
+Vector.magnitudeSq = v => v.x ** 2 + v.y ** 2
 
 Vector.magnitude = v =>
   pipe(v)
@@ -33,7 +33,7 @@ Vector.normal = v =>
     .p(m => scale(v, 1 / m))
     .value()
 
-Vector.scale = ({ x, y }, s) => new Vector(x * s, y * s)
+Vector.scale = (v, s) => new Vector(v.x * s, v.y * s)
 
 Vector.scaleMagTo = (v, s) =>
   pipe(v)

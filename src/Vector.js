@@ -8,16 +8,14 @@ export default class Vector {
 }
 
 Vector.add = (...vs) =>
-  vs.reduce(
-    (v1, v2) => new Vector(v1.x + v2.x, v1.y + v2.y),
-    new Vector(),
-  )
+  vs.length
+    ? vs.reduce((v1, v2) => new Vector(v1.x + v2.x, v1.y + v2.y))
+    : new Vector()
 
 Vector.subtract = (...vs) =>
-  vs.reduce(
-    (v1, v2) => new Vector(v1.x - v2.x, v1.y - v2.y),
-    new Vector(),
-  )
+  vs.length
+    ? vs.reduce((v1, v2) => new Vector(v1.x - v2.x, v1.y - v2.y))
+    : new Vector()
 
 Vector.magnitudeSq = v => v.x ** 2 + v.y ** 2
 

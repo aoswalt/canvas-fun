@@ -1,8 +1,9 @@
 import { clear } from './canvas'
 import { init as initWorld } from './world'
+import physics from './systems/physics'
 import draw from './systems/draw'
 
-const systems = [draw]
+const systems = [physics, draw]
 
 const run = world => {
   clear()

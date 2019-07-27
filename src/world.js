@@ -6,13 +6,17 @@ const structure = {
   entities: [], // gi
 
   position: initArray(), // x, y
+  velocity: initArray(), // x, y
   body: initArray(), // type, <any>?
+  forces: initArray(), // [{ x, y }]
   display: initArray(), // color
 }
 
 const ball = {
   position: new Vector(200, 200),
+  velocity: new Vector(),
   body: { type: 'circle', radius: 50 },
+  forces: [],
   display: { color: 'blue' },
 }
 

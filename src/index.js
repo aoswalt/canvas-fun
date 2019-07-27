@@ -1,26 +1,22 @@
-import Ball from './Ball'
-import Entity from './Entity'
-import Vector from './Vector'
 import { clear } from './canvas'
+import { allocate, initAllocator, initArray, set } from './generationalIndexing'
 
-const animate = entities =>
-  entities
-    .filter(e => !e.isAlive || e.isAlive(e))
-    .map(e => e.update(e)) // should be a fixed physics loop
-    .map(e => e.draw(e))
+const systems = []
 
-const drawLoop = entities => {
+const run = world => {
   clear()
-  const updated = animate(entities)
-  requestAnimationFrame(() => drawLoop(updated))
+
+  const updatedWorld = systems.reduce(
+    (currentWorld, system) => system(currentWorld),
+    world,
+  )
+
+  requestAnimationFrame(() => run(updatedWorld))
 }
 
-const initShapes = [
-  new Ball({
-    color: 'blue',
-    radius: 50,
-    entity: new Entity({ position: new Vector(200, 200) }),
-  }),
-]
+const world = {
+  allocator: initAllocator(),
+  entities: [],
+}
 
-drawLoop(initShapes)
+run(world)

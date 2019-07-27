@@ -38,3 +38,15 @@ Vector.scaleMagTo = (v, s) =>
     .p(Vector.normal)
     .p(m => Vector.scale(v, s / m))
     .value()
+
+Vector.dot = (v1, v2) => v1.x * v2.x + v1.y * v2.y
+
+// −(2(n · v) n − v)
+Vector.reflectAcross = (v, normal) => {
+  const dot = Vector.dot(v, normal)
+
+  const scaledNormal = Vector.scale(normal, 2 * dot)
+  const diff = Vector.subtract(scaledNormal, v)
+
+  return Vector.scale(diff, -1)
+}

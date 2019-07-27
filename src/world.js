@@ -16,7 +16,7 @@ const structure = {
 const ball = {
   position: new Vector(200, 200),
   velocity: new Vector(),
-  body: { type: 'circle', radius: 50 },
+  body: { type: 'circle', radius: 50, elasticity: 0.8 },
   gravity: 1,
   forces: [],
   display: { color: 'blue' },

@@ -69,5 +69,7 @@ export const set = (array, gi, value) => {
 export const get = (array, gi) => {
   const entry = array[gi.index]
 
+  if(!entry) return null
+
   return entry.generation === gi.generation ? entry.value : null
 }

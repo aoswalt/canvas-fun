@@ -2,10 +2,11 @@ import { clear } from './canvas'
 import { init as initWorld } from './world'
 import gravity from './systems/gravity'
 import worldCollision from './systems/worldCollision'
+import playerControl from './systems/playerControl'
 import physics from './systems/physics'
 import draw from './systems/draw'
 
-const systems = [gravity, worldCollision, physics, draw]
+const systems = [gravity, worldCollision, playerControl, physics, draw]
 
 const run = world => {
   clear()

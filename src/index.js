@@ -1,5 +1,5 @@
 import { clear } from './canvas'
-import { allocate, initAllocator, initArray, set } from './generationalIndexing'
+import { init as initWorld } from './world'
 
 const systems = []
 
@@ -14,9 +14,6 @@ const run = world => {
   requestAnimationFrame(() => run(updatedWorld))
 }
 
-const world = {
-  allocator: initAllocator(),
-  entities: [],
-}
+const world = initWorld()
 
 run(world)

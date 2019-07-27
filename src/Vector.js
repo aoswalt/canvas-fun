@@ -23,13 +23,13 @@ Vector.magnitudeSq = ({ x, y }) => x ** 2 + y ** 2
 
 Vector.magnitude = v =>
   pipe(v)
-    .p(magnitudeSq)
+    .p(Vector.magnitudeSq)
     .p(Math.sqrt)
     .value()
 
 Vector.normal = v =>
   pipe(v)
-    .p(magnitude)
+    .p(Vector.magnitude)
     .p(m => scale(v, 1 / m))
     .value()
 
@@ -37,6 +37,6 @@ Vector.scale = ({ x, y }, s) => new Vector(x * s, y * s)
 
 Vector.scaleMagTo = (v, s) =>
   pipe(v)
-    .p(normal)
-    .p(m => scale(v, s / m))
+    .p(Vector.normal)
+    .p(m => Vector.scale(v, s / m))
     .value()

@@ -1,9 +1,11 @@
 import Vector from './Vector'
 import { allocate, initAllocator, initArray, set } from './generationalIndexing'
 
-const structure = {
+const worldStructure = {
   allocator: initAllocator(),
   entities: [], // gi
+
+  _initialValues: initArray(),
 
   position: initArray(), // x, y
   velocity: initArray(), // x, y
@@ -39,10 +41,13 @@ const spawn = (world, skeleton) => {
     entities,
   }
 
-  return updateWorld(worldWithEntity, [genIndex, skeleton])
+  return updateWorld(worldWithEntity, [
+    genIndex,
+    { ...skeleton, _initialValues: skeleton },
+  ])
 }
 
-export const init = () => spawn(structure, ball)
+export const init = () => spawn(worldStructure, ball)
 
 export const updateWorld = (currentWorld, entityUpdate) => ({
   ...currentWorld,

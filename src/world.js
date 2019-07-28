@@ -9,9 +9,11 @@ const structure = {
   velocity: initArray(), // x, y
   body: initArray(), // type, <any>?
   gravity: initArray(), // float
+  input: initArray(), // ?
   player: initArray(), // ?
   forces: initArray(), // [{ x, y }]
   display: initArray(), // color
+  age: initArray(), // current, lifespan
 }
 
 const ball = {
@@ -19,9 +21,11 @@ const ball = {
   velocity: new Vector(5, 5),
   body: { type: 'circle', radius: 50, elasticity: .8, friction: 0.02 },
   gravity: 1,
-  player: true,
+  input: {},
+  player: {},
   forces: [],
   display: { color: 'blue' },
+  age: { current: 0, lifespan: 200 },
 }
 
 const spawn = (world, skeleton) => {

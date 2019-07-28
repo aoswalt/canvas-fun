@@ -1,7 +1,6 @@
-import { get, isAlive, set } from '../generationalIndexing'
 import Vector from '../Vector'
-import { updateWorld } from '../world'
 import { height, width } from '../canvas'
+import { setupSystem } from '../systems'
 
 const bounds = {
   top: {
@@ -100,30 +99,24 @@ const ballBounce = ({ position, velocity, forces, body }, side) => {
     -body.friction,
   )
 
-  return Vector.add(dampenedReflection, positionReset, velocityDampening, friction)
+  return Vector.add(
+    dampenedReflection,
+    positionReset,
+    velocityDampening,
+    friction,
+  )
 }
 
-export default world =>
-  world.entities
-    .map(gi => {
-      if(!isAlive(world.allocator, gi)) return
+const bounce = (entity) => {
+  if(entity.body.type !== 'circle') return
 
-      const position = get(world.position, gi)
-      const velocity = get(world.velocity, gi)
-      const forces = get(world.forces, gi)
-      const body = get(world.body, gi)
+  const reflection = Vector.add(
+    ...Object.keys(bounds).map(b => ballBounce(entity, b)),
+  )
 
-      if(!position || !velocity || !forces || !body) return
+  if(!reflection.x && !reflection.y) return
 
-      if(body.type !== 'circle') return
+  return { forces: [...entity.forces, reflection] }
+}
 
-      const reflection = Vector.add(
-        ...Object.keys(bounds).map(b =>
-          ballBounce({ position, velocity, forces, body }, b),
-        ),
-      )
-
-      return [gi, { forces: [...forces, reflection] }]
-    })
-    .filter(u => u)
-    .reduce(updateWorld, world)
+export default setupSystem(['position', 'velocity', 'forces', 'body'], bounce)

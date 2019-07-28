@@ -12,12 +12,17 @@ export const circle = (
   const currentAlpha = ctx.globalAlpha
   ctx.globalAlpha = alpha
 
-  if (fill) {
-    ctx.fillStyle = fill
+  const fillValue =
+    typeof fill === 'string'
+      ? fill
+      : `hsl(${fill[0]}, ${fill[1]}%, ${fill[2]}%, ${fill[3] || 1})`
+
+  if(fill) {
+    ctx.fillStyle = fillValue
     ctx.fill()
   }
 
-  if (stroke) {
+  if(stroke) {
     ctx.strokeStyle = stroke
     ctx.lineWidth = strokeWidth
     ctx.stroke()

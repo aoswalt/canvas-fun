@@ -1,5 +1,9 @@
 import { context } from './canvas'
 
+export const blue = (a = 1) => [240, 100, 50, a]
+export const red = (a = 1) => [360, 100, 50, a]
+export const black = (a = 1) => [360, 100, 0, a]
+
 export const circle = (
   { x, y },
   radius,

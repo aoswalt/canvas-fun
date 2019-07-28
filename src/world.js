@@ -1,5 +1,6 @@
 import Vector from './Vector'
 import { allocate, initAllocator, initArray, set } from './generationalIndexing'
+import { blue, red } from './draw'
 
 const worldStructure = {
   allocator: initAllocator(),
@@ -32,7 +33,7 @@ const ball = {
   input: {},
   player: {},
   forces: [],
-  display: { color: 'blue' },
+  display: { color: blue() },
   age: { current: 0, lifespan: 200 },
 }
 

@@ -61,7 +61,11 @@ export const initArray = () => generationalIndexArray
 export const set = (array, gi, value) => {
   const entry = { generation: gi.generation, value }
 
-  if(!array[gi.index]) return [entry]
+  // FIXME(adam): gross mutability
+  if(!array[gi.index]) {
+    array[gi.index] = entry
+    return array
+  }
 
   return array.map((e, i) => (i === gi.index ? entry : e))
 }

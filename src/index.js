@@ -8,10 +8,12 @@ import playerControl from './systems/playerControl'
 import physics from './systems/physics'
 import displayAging from './systems/displayAging'
 import draw from './systems/draw'
+import simpleSpawner from './systems/simpleSpawner'
 
 const systems = [
   aging,
   bodyAging,
+  simpleSpawner,
   gravity,
   worldCollision,
   playerControl,

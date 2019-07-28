@@ -19,7 +19,7 @@ const worldStructure = {
   age: initArray(), // current, lifespan
 }
 
-const ball = {
+export const ball = {
   position: new Vector(200, 200),
   velocity: new Vector(5, 5),
   body: {
@@ -40,7 +40,7 @@ const ball = {
   age: { current: 0, lifespan: 200 },
 }
 
-const spawn = (world, skeleton) => {
+export const spawn = (world, skeleton) => {
   const [genIndex, allocator] = allocate(world.allocator)
 
   const entities = [...world.entities, genIndex]

@@ -33,7 +33,10 @@ const ball = {
   input: {},
   player: {},
   forces: [],
-  display: { color: blue() },
+  display: {
+    color: blue(),
+    aging: { type: 'color_cycle', color: red(), speed: 0.5 },
+  },
   age: { current: 0, lifespan: 200 },
 }
 

@@ -6,9 +6,19 @@ import gravity from './systems/gravity'
 import worldCollision from './systems/worldCollision'
 import playerControl from './systems/playerControl'
 import physics from './systems/physics'
+import displayAging from './systems/displayAging'
 import draw from './systems/draw'
 
-const systems = [aging, bodyAging, gravity, worldCollision, playerControl, physics, draw]
+const systems = [
+  aging,
+  bodyAging,
+  gravity,
+  worldCollision,
+  playerControl,
+  physics,
+  displayAging,
+  draw,
+]
 
 const run = world => {
   clear()

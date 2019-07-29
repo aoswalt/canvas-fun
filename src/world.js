@@ -43,12 +43,12 @@ export const ball = {
 export const spawn = (world, skeleton) => {
   const [genIndex, allocator] = allocate(world.allocator)
 
-  const entities = [...world.entities, genIndex]
+  // FIXME(adam): gross mutability
+  world.entities[genIndex.index] = genIndex
 
   const worldWithEntity = {
     ...world,
     allocator,
-    entities,
   }
 
   return updateWorld(worldWithEntity, [

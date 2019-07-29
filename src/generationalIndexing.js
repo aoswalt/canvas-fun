@@ -42,7 +42,10 @@ export const deallocate = ({ entries, free }, genIndex) => {
   const newEntry = { ...entry, isAlive: false }
 
   const newEntries = entries.map((e, i) => (i === index ? newEntry : e))
-  const newFree = [...free, index].sort()
+
+  // NOTE(adam): guard against accidental duplicates
+  const newFreeSet = new Set([...free, index])
+  const newFree = [...newFreeSet].sort((a, b) => a - b)
 
   return { entries: newEntries, free: newFree }
 }

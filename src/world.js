@@ -20,8 +20,8 @@ const worldStructure = {
 }
 
 export const ball = {
-  position: new Vector(200, 200),
-  velocity: new Vector(5, 5),
+  position: Vector.new(200, 200),
+  velocity: Vector.new(5, 5),
   body: {
     type: 'circle',
     radius: 50,

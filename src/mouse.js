@@ -9,15 +9,15 @@ canvasElement().addEventListener('mouseup', () => (mousePressed = false))
 export const mouseDown = () => mousePressed
 export const mouseUp = () => mousePressed
 
-let mousePosition = new Vector()
+let mousePosition = Vector.new()
 
 canvasElement().addEventListener(
   'mousemove',
-  ({ clientX: x, clientY: y }) => (mousePosition = new Vector(x, y)),
+  ({ clientX: x, clientY: y }) => (mousePosition = Vector.new(x, y)),
 )
 canvasElement().addEventListener(
   'mouseenter',
-  ({ clientX: x, clientY: y }) => (mousePosition = new Vector(x, y)),
+  ({ clientX: x, clientY: y }) => (mousePosition = Vector.new(x, y)),
 )
 
 export const position = () => mousePosition

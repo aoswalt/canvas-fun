@@ -14,7 +14,7 @@ const getMove = ({ position, velocity, forces }) => {
   }
 
   if(anyKeysDown(SPACE, SHIFT)) {
-    return new Vector(0, -1.5)
+    return Vector.new(0, -1.5)
   }
 }
 

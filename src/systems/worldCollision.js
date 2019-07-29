@@ -5,38 +5,38 @@ import { setupSystem } from '../systems'
 const bounds = {
   top: {
     at: v => v.y <= 0,
-    normal: new Vector(0, 1),
+    normal: Vector.new(0, 1),
   },
   right: {
     at: v => v.x >= width(),
-    normal: new Vector(-1, 0),
+    normal: Vector.new(-1, 0),
   },
   bottom: {
     at: v => v.y >= height(),
-    normal: new Vector(0, -1),
+    normal: Vector.new(0, -1),
   },
   left: {
     at: v => v.x <= 0,
-    normal: new Vector(1, 0),
+    normal: Vector.new(1, 0),
   },
 }
 
 const ballExtent = (position, body, side) => {
   switch(side) {
     case 'top': {
-      const radiusSide = new Vector(0, -body.radius)
+      const radiusSide = Vector.new(0, -body.radius)
       return Vector.add(position, radiusSide)
     }
     case 'right': {
-      const radiusSide = new Vector(body.radius, 0)
+      const radiusSide = Vector.new(body.radius, 0)
       return Vector.add(position, radiusSide)
     }
     case 'bottom': {
-      const radiusSide = new Vector(0, body.radius)
+      const radiusSide = Vector.new(0, body.radius)
       return Vector.add(position, radiusSide)
     }
     case 'left': {
-      const radiusSide = new Vector(-body.radius, 0)
+      const radiusSide = Vector.new(-body.radius, 0)
       return Vector.add(position, radiusSide)
     }
   }
@@ -45,13 +45,13 @@ const ballExtent = (position, body, side) => {
 const ballPositionReset = (extent, side) => {
   switch(side) {
     case 'top':
-      return new Vector(0, -extent.y)
+      return Vector.new(0, -extent.y)
     case 'right':
-      return new Vector(width() - extent.x, 0)
+      return Vector.new(width() - extent.x, 0)
     case 'bottom':
-      return new Vector(0, height() - extent.y)
+      return Vector.new(0, height() - extent.y)
     case 'left':
-      return new Vector(-extent.x, 0)
+      return Vector.new(-extent.x, 0)
   }
 }
 
@@ -59,10 +59,10 @@ const dampenDirection = (velocity, side) => {
   switch(side) {
     case 'top':
     case 'bottom':
-      return new Vector(0, velocity.y)
+      return Vector.new(0, velocity.y)
     case 'right':
     case 'left':
-      return new Vector(velocity.x, 0)
+      return Vector.new(velocity.x, 0)
   }
 }
 
@@ -70,17 +70,17 @@ const frictionDirection = (velocity, side) => {
   switch(side) {
     case 'top':
     case 'bottom':
-      return new Vector(velocity.x, 0)
+      return Vector.new(velocity.x, 0)
     case 'right':
     case 'left':
-      return new Vector(0, velocity.y)
+      return Vector.new(0, velocity.y)
   }
 }
 
 const ballBounce = ({ position, velocity, forces, body }, side) => {
   const extent = ballExtent(position, body, side)
 
-  if(!bounds[side].at(extent, side)) return new Vector()
+  if(!bounds[side].at(extent, side)) return Vector.new()
 
   // move entity back into bounds
   const positionReset = ballPositionReset(extent, side)

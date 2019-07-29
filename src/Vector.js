@@ -1,21 +1,18 @@
 import pipe from './pipe'
 
-export default class Vector {
-  constructor(x = 0, y = 0) {
-    this.x = x
-    this.y = y
-  }
-}
+export default class Vector {}
+
+Vector.new = (x = 0, y = 0) => ({ x, y })
 
 Vector.add = (...vs) =>
   vs.length
-    ? vs.reduce((v1, v2) => new Vector(v1.x + v2.x, v1.y + v2.y))
-    : new Vector()
+    ? vs.reduce((v1, v2) => Vector.new(v1.x + v2.x, v1.y + v2.y))
+    : Vector.new()
 
 Vector.subtract = (...vs) =>
   vs.length
-    ? vs.reduce((v1, v2) => new Vector(v1.x - v2.x, v1.y - v2.y))
-    : new Vector()
+    ? vs.reduce((v1, v2) => Vector.new(v1.x - v2.x, v1.y - v2.y))
+    : Vector.new()
 
 Vector.magnitudeSq = v => v.x ** 2 + v.y ** 2
 
@@ -31,7 +28,7 @@ Vector.normal = v =>
     .p(m => scale(v, 1 / m))
     .value()
 
-Vector.scale = (v, s) => new Vector(v.x * s, v.y * s)
+Vector.scale = (v, s) => Vector.new(v.x * s, v.y * s)
 
 Vector.scaleMagTo = (v, s) =>
   pipe(v)

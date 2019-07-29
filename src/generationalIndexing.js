@@ -1,9 +1,9 @@
+import produce from 'immer'
+
 const generationalIndex = {
   index: 0,
   generation: 0,
 }
-
-const init = () => generationalIndex
 
 const allocatorEntry = {
   isAlive: true,
@@ -17,38 +17,40 @@ const generationalIndexAllocator = {
 
 export const initAllocator = () => generationalIndexAllocator
 
-export const allocate = ({ entries, free }) => {
-  if(!free.length) {
-    const gi = { index: entries.length, generation: 0 }
+export const allocate = allocator => {
+  if(!allocator.free.length) {
+    const gi = { index: allocator.entries.length, generation: 0 }
 
-    return [gi, { entries: [...entries, allocatorEntry], free: [] }]
+    return [
+      gi,
+      produce(allocator, draftAllocator => {
+        draftAllocator.entries.push(allocatorEntry)
+      }),
+    ]
   }
 
-  const [nextIndex, ...remainingFree] = free
-  const existing = entries[nextIndex]
-  const nextEntry = { isAlive: true, generation: existing.generation + 1 }
-
-  const newEntries = entries.map((e, i) => (i === nextIndex ? nextEntry : e))
-
+  const nextIndex = allocator.free[0]
   const gi = { index: nextIndex, generation: 0 }
 
-  return [gi, { entries: newEntries, free: remainingFree }]
+  return [
+    gi,
+    produce(allocator, draftAllocator => {
+      draftAllocator.free.shift()
+
+      draftAllocator.entries[nextIndex].generation++
+      draftAllocator.entries[nextIndex].isAlive = true
+    }),
+  ]
 }
 
-export const deallocate = ({ entries, free }, genIndex) => {
+export const deallocate = produce((allocator, genIndex) => {
   const index = genIndex.index
 
-  const entry = entries[index]
-  const newEntry = { ...entry, isAlive: false }
+  allocator.entries[index].isAlive = false
 
-  const newEntries = entries.map((e, i) => (i === index ? newEntry : e))
-
-  // NOTE(adam): guard against accidental duplicates
-  const newFreeSet = new Set([...free, index])
-  const newFree = [...newFreeSet].sort((a, b) => a - b)
-
-  return { entries: newEntries, free: newFree }
-}
+  allocator.free.push(index)
+  allocator.free.sort((a, b) => a - b)
+})
 
 export const isAlive = (allocator, gi) => allocator.entries[gi.index].isAlive
 
@@ -61,22 +63,17 @@ const generationalIndexArray = []
 
 export const initArray = () => generationalIndexArray
 
-export const set = (array, gi, value) => {
-  const entry = { generation: gi.generation, value }
-
-  // FIXME(adam): gross mutability
+export const set = produce((array, gi, value) => {
+  // TODO(adam): this could use some cleanup
   if(!array[gi.index]) {
-    array[gi.index] = entry
-    return array
+    array[gi.index] = { ...generationalIndex }
   }
 
-  return array.map((e, i) => (i === gi.index ? entry : e))
-}
+  array[gi.index].value = value
+})
 
 export const get = (array, gi) => {
   const entry = array[gi.index]
 
-  if(!entry) return null
-
-  return entry.generation === gi.generation ? entry.value : null
+  return entry && entry.generation === gi.generation ? entry.value : null
 }

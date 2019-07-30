@@ -57,15 +57,13 @@ export const spawn = (world, skeleton) => {
 
 export const init = () => spawn(worldStructure, ball)
 
-export const updateWorld = (currentWorld, entityUpdate) => ({
-  ...currentWorld,
-  ...applyWorldUpdates(currentWorld, entityUpdate),
-})
+export const updateWorld = (world, [gi, entityUpdate]) => {
+  const updates = Object.fromEntries(
+    Object.entries(entityUpdate).map(([component, update]) => [
+      component,
+      set(world[component], gi, update),
+    ]),
+  )
 
-const applyWorldUpdates = (world, [gi, updates]) =>
-  Object.entries(updates).reduce(applyUpdate(gi), world)
-
-const applyUpdate = gi => (world, [component, update]) => ({
-  ...world,
-  [component]: set(world[component], gi, update),
-})
+  return { ...world, ...updates }
+}

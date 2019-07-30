@@ -1,6 +1,7 @@
 import Vector from './Vector'
 import { allocate, initAllocator, initArray, set } from './generationalIndexing'
 import { blue, red } from './draw'
+import produce from 'immer'
 
 const worldStructure = {
   allocator: initAllocator(),
@@ -43,13 +44,10 @@ export const ball = {
 export const spawn = (world, skeleton) => {
   const [genIndex, allocator] = allocate(world.allocator)
 
-  // FIXME(adam): gross mutability
-  world.entities[genIndex.index] = genIndex
-
-  const worldWithEntity = {
-    ...world,
-    allocator,
-  }
+  const worldWithEntity = produce(world, draftWorld => {
+    world.entities[genIndex.index] = genIndex
+    world.allocator = allocator
+  })
 
   return updateWorld(worldWithEntity, [
     genIndex,

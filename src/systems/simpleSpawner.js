@@ -1,11 +1,12 @@
 import { ball, spawn } from '../world'
 import { position as mousePosition } from '../mouse'
-import { ENTER, isKeyDown, getKeysDown } from '../keys'
+import { ENTER, getKeysDown, isKeyDown } from '../keys'
+import produce from 'immer'
 
 export default world => {
-  if(!isKeyDown(ENTER)) return world
+  if(!isKeyDown(ENTER)) return
 
   const position = mousePosition()
 
-  return spawn(world, {...ball, position})
+  spawn(world, { ...ball, position })
 }

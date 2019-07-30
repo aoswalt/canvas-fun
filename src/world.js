@@ -1,23 +1,26 @@
 import Vector from './Vector'
-import { allocate, initAllocator, initArray, set } from './generationalIndexing'
+import {
+  GenerationalIndexAllocator,
+  GenerationalIndexArray,
+} from './generationalIndexing'
 import { blue, red } from './draw'
 import produce from 'immer'
 
 const worldStructure = {
-  allocator: initAllocator(),
+  allocator: GenerationalIndexAllocator.new(),
   entities: [], // gi
 
-  _initialValues: initArray(),
+  _initialValues: GenerationalIndexArray.new(),
 
-  position: initArray(), // x, y
-  velocity: initArray(), // x, y
-  body: initArray(), // type, <any>?
-  gravity: initArray(), // float
-  input: initArray(), // ?
-  player: initArray(), // ?
-  forces: initArray(), // [{ x, y }]
-  display: initArray(), // color
-  age: initArray(), // current, lifespan
+  position: GenerationalIndexArray.new(), // x, y
+  velocity: GenerationalIndexArray.new(), // x, y
+  body: GenerationalIndexArray.new(), // type, <any>?
+  gravity: GenerationalIndexArray.new(), // float
+  input: GenerationalIndexArray.new(), // ?
+  player: GenerationalIndexArray.new(), // ?
+  forces: GenerationalIndexArray.new(), // [{ x, y }]
+  display: GenerationalIndexArray.new(), // color
+  age: GenerationalIndexArray.new(), // current, lifespan
 }
 
 export const ball = {
@@ -42,28 +45,21 @@ export const ball = {
 }
 
 export const spawn = (world, skeleton) => {
-  const [genIndex, allocator] = allocate(world.allocator)
+  const genIndex = GenerationalIndexAllocator.allocate(world.allocator)
 
-  const worldWithEntity = produce(world, draftWorld => {
-    world.entities[genIndex.index] = genIndex
-    world.allocator = allocator
-  })
+  world.entities[genIndex.index] = genIndex
 
-  return updateWorld(worldWithEntity, [
-    genIndex,
-    { ...skeleton, _initialValues: skeleton },
-  ])
+  updateWorld(world, [genIndex, { ...skeleton, _initialValues: skeleton }])
 }
 
-export const init = () => spawn(worldStructure, ball)
+export const init = () =>
+  produce(worldStructure, structure => spawn(structure, ball))
 
 export const updateWorld = (world, [gi, entityUpdate]) => {
-  const updates = Object.fromEntries(
-    Object.entries(entityUpdate).map(([component, update]) => [
-      component,
-      set(world[component], gi, update),
-    ]),
+  Object.entries(entityUpdate).forEach(([component, update]) =>
+    GenerationalIndexArray.set(world[component], gi, update),
   )
-
-  return { ...world, ...updates }
 }
+
+export const setValue = (world, key, gi, value) => GenerationalIndexArray.set(world[key], gi, value)
+export const deallocate = (world, gi) => GenerationalIndexAllocator.deallocate(world.allocator, gi)

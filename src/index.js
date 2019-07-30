@@ -9,6 +9,7 @@ import physics from './systems/physics'
 import displayAging from './systems/displayAging'
 import draw from './systems/draw'
 import simpleSpawner from './systems/simpleSpawner'
+import produce from 'immer'
 
 const systems = [
   aging,
@@ -22,13 +23,12 @@ const systems = [
   draw,
 ]
 
+const runSystem = produce((world, system) => system(world))
+
 const run = world => {
   clear()
 
-  const updatedWorld = systems.reduce(
-    (currentWorld, system) => system(currentWorld),
-    world,
-  )
+  const updatedWorld = systems.reduce(runSystem, world)
 
   requestAnimationFrame(() => run(updatedWorld))
 }

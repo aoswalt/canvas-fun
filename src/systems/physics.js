@@ -1,16 +1,16 @@
 import Vector from '../Vector'
 import { setupSystem } from '../systems'
 
-const applyForces = ({ position, velocity, forces }) => {
-  // current velocity + net force
+// current velocity + net force
+const applyForces = ({ position, velocity, forces }, gi, world, setValue) => {
   const newVelocity = Vector.add(velocity, ...forces)
-  const newPosition = Vector.add(position, newVelocity)
+  setValue('velocity', newVelocity)
 
-  return {
-    position: newPosition,
-    velocity: newVelocity,
-    forces: [],
-  }
+  const newPosition = Vector.add(position, newVelocity)
+  setValue('position', newPosition)
+
+  const newForces = []
+  setValue('forces', [])
 }
 
 export default setupSystem(['position', 'velocity', 'forces'], applyForces)

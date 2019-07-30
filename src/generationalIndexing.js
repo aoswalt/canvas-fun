@@ -1,78 +1,61 @@
 import produce from 'immer'
 
-const generationalIndex = {
-  index: 0,
-  generation: 0,
-}
+export class GenerationalIndex {}
 
-const allocatorEntry = {
-  isAlive: true,
-  generation: 0,
-}
+GenerationalIndex.new = (index = 0) => ({ index, generation: 0 })
 
-const generationalIndexAllocator = {
-  entries: [],
-  free: [],
-}
+export class AllocatorEntry {}
 
-export const initAllocator = () => generationalIndexAllocator
+AllocatorEntry.new = () => ({ isAlive: true, generation: 0 })
 
-export const allocate = allocator => {
+export class GenerationalIndexAllocator {}
+
+GenerationalIndexAllocator.new = () => ({ entries: [], free: [] })
+
+GenerationalIndexAllocator.allocate = allocator => {
   if(!allocator.free.length) {
-    const gi = { index: allocator.entries.length, generation: 0 }
+    allocator.entries.push(AllocatorEntry.new())
 
-    return [
-      gi,
-      produce(allocator, draftAllocator => {
-        draftAllocator.entries.push(allocatorEntry)
-      }),
-    ]
+    return GenerationalIndex.new(allocator.entries.length - 1)
   }
 
-  const nextIndex = allocator.free[0]
-  const gi = { index: nextIndex, generation: 0 }
+  const nextIndex = allocator.free.shift()
 
-  return [
-    gi,
-    produce(allocator, draftAllocator => {
-      draftAllocator.free.shift()
+  allocator.entries[nextIndex].generation++
+  allocator.entries[nextIndex].isAlive = true
 
-      draftAllocator.entries[nextIndex].generation++
-      draftAllocator.entries[nextIndex].isAlive = true
-    }),
-  ]
+  return GenerationalIndex.new(nextIndex)
 }
 
-export const deallocate = produce((allocator, genIndex) => {
+GenerationalIndexAllocator.deallocate = (allocator, genIndex) => {
   const index = genIndex.index
 
   allocator.entries[index].isAlive = false
 
   allocator.free.push(index)
   allocator.free.sort((a, b) => a - b)
-})
+}
 
-export const isAlive = (allocator, gi) => allocator.entries[gi.index].isAlive
+GenerationalIndexAllocator.isAlive = (allocator, gi) => allocator.entries[gi.index].isAlive
 
 const arrayEntry = {
   value: null,
   generation: 0,
 }
 
-const generationalIndexArray = []
+export class GenerationalIndexArray {}
 
-export const initArray = () => generationalIndexArray
+GenerationalIndexArray.new = () => []
 
-export const set = produce((array, gi, value) => {
-  // TODO(adam): this could use some cleanup
+GenerationalIndexArray.set = (array, gi, value) => {
   if(!array[gi.index]) {
-    array[gi.index] = { ...generationalIndex }
+    array[gi.index] = GenerationalIndex.new()
   }
 
   array[gi.index].value = value
-})
+}
 
-export const get = (array, gi) => {
+GenerationalIndexArray.get = (array, gi) => {
   const entry = array[gi.index]
 
   return entry && entry.generation === gi.generation ? entry.value : null

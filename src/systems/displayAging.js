@@ -1,5 +1,6 @@
 import Vector from '../Vector'
 import { setupSystem } from '../systems'
+import produce from 'immer'
 
 const mapValue = (v1, v2, amount) => {
   const diff = v2 - v1
@@ -9,7 +10,7 @@ const mapValue = (v1, v2, amount) => {
 const transitionColor = (hsl1, hsl2, amount) =>
   hsl1.map((v, i) => [v, hsl2[i]]).map(([v1, v2]) => mapValue(v1, v2, amount))
 
-const grow = ({ _initialValues, age, display }) => {
+const grow = ({ _initialValues, age, display }, gi, world, setValue) => {
   if(!display.aging || !display.aging.type === 'color_cycle') {
     return
   }
@@ -18,13 +19,16 @@ const grow = ({ _initialValues, age, display }) => {
 
   const transitionAmount = -cycleValue / 2 + 0.5
 
-  const newColor = transitionColor(
-    _initialValues.display.color,
-    display.aging.color,
-    transitionAmount,
+  setValue(
+    'display',
+    produce(display, draft => {
+      draft.color = transitionColor(
+        _initialValues.display.color,
+        display.aging.color,
+        transitionAmount,
+      )
+    }),
   )
-
-  return { display: { ...display, color: newColor } }
 }
 
 export default setupSystem(['_initialValues', 'age', 'display'], grow)

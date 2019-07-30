@@ -1,6 +1,8 @@
 import Vector from '../Vector'
 import { height, width } from '../canvas'
 import { setupSystem } from '../systems'
+import { setValue } from '../world'
+import produce from 'immer'
 
 const bounds = {
   top: {
@@ -107,7 +109,7 @@ const ballBounce = ({ position, velocity, forces, body }, side) => {
   )
 }
 
-const bounce = (entity) => {
+const bounce = (entity, gi, world, setValue) => {
   if(entity.body.type !== 'circle') return
 
   const reflection = Vector.add(
@@ -116,7 +118,12 @@ const bounce = (entity) => {
 
   if(!reflection.x && !reflection.y) return
 
-  return { forces: [...entity.forces, reflection] }
+  setValue(
+    'forces',
+    produce(entity.forces, draft => {
+      draft.push(reflection)
+    }),
+  )
 }
 
 export default setupSystem(['position', 'velocity', 'forces', 'body'], bounce)

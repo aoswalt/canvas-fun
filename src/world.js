@@ -1,4 +1,5 @@
 import Vector from './Vector'
+import KeyState from './world/KeyState'
 import {
   GenerationalIndexAllocator,
   GenerationalIndexArray,
@@ -10,6 +11,7 @@ const worldStructure = {
   allocator: GenerationalIndexAllocator.new(),
   entities: [], // gi
 
+  _system: { keys: KeyState.new() },
   _initialValues: GenerationalIndexArray.new(),
 
   position: GenerationalIndexArray.new(), // x, y
@@ -61,5 +63,7 @@ export const updateWorld = (world, [gi, entityUpdate]) => {
   )
 }
 
-export const setValue = (world, key, gi, value) => GenerationalIndexArray.set(world[key], gi, value)
-export const deallocate = (world, gi) => GenerationalIndexAllocator.deallocate(world.allocator, gi)
+export const setValue = (world, key, gi, value) =>
+  GenerationalIndexArray.set(world[key], gi, value)
+export const deallocate = (world, gi) =>
+  GenerationalIndexAllocator.deallocate(world.allocator, gi)

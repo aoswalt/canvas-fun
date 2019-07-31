@@ -1,5 +1,6 @@
 import { clear } from './canvas'
 import { init as initWorld } from './world'
+import systemInput from './systems/systemInput'
 import aging from './systems/aging'
 import bodyAging from './systems/bodyAging'
 import gravity from './systems/gravity'
@@ -9,9 +10,10 @@ import physics from './systems/physics'
 import displayAging from './systems/displayAging'
 import draw from './systems/draw'
 import simpleSpawner from './systems/simpleSpawner'
-import produce from 'immer'
+import produce, { original } from 'immer'
 
 const systems = [
+  systemInput,
   aging,
   bodyAging,
   simpleSpawner,

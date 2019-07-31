@@ -1,8 +1,8 @@
 import {
   GenerationalIndexAllocator,
   GenerationalIndexArray,
-} from '../generationalIndexing'
-import { setValue, updateWorld } from '../world'
+} from './generationalIndexing'
+import { setValue, updateWorld } from './world'
 
 export const setupSystem = (componentIds, updater) => world =>
   world.entities.forEach(gi => {

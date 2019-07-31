@@ -1,11 +1,11 @@
 import { mouseDown, position as mousePosition } from '../mouse'
-import { SHIFT, SPACE, anyKeysDown } from '../keys'
 import Vector from '../Vector'
 import { setupSystem } from '../systems'
 import { setValue } from '../world'
+import KeyState, { keys } from '../world/KeyState'
 import produce from 'immer'
 
-const getMove = ({ position, velocity, forces }) => {
+const getMove = ({ position, velocity, forces }, world) => {
   // only adding a force, but direct pos, etc. manipulation would be more stable
   if(mouseDown()) {
     const positionReset = Vector.subtract(mousePosition(), position)
@@ -15,13 +15,13 @@ const getMove = ({ position, velocity, forces }) => {
     return Vector.add(positionReset, forcesReset, velocityReset)
   }
 
-  if(anyKeysDown(SPACE, SHIFT)) {
+  if(KeyState.isKeyDown(world, keys.SPACE)) {
     return Vector.new(0, -1.5)
   }
 }
 
 const move = (entity, gi, world, setValue) => {
-  const moveVector = getMove(entity)
+  const moveVector = getMove(entity, world)
 
   if(moveVector) {
     setValue(

@@ -1,10 +1,10 @@
 import { ball, spawn } from '../world'
+import KeyState, { keys } from '../world/KeyState'
 import { position as mousePosition } from '../mouse'
-import { ENTER, getKeysDown, isKeyDown } from '../keys'
 import produce from 'immer'
 
 export default world => {
-  if(!isKeyDown(ENTER)) return
+  if(!KeyState.onKeyPress(world, keys.ENTER, 20)) return
 
   const position = mousePosition()
 

@@ -11,7 +11,7 @@ const worldStructure = {
   allocator: GenerationalIndexAllocator.new(),
   entities: [], // gi
 
-  _system: { keys: KeyState.new() },
+  _system: { keyState: KeyState.new() },
   _initialValues: GenerationalIndexArray.new(),
 
   position: GenerationalIndexArray.new(), // x, y

@@ -1,3 +1,6 @@
+const body = document.querySelector('body')
+body.addEventListener('contextmenu', e => e.preventDefault())
+
 const canvas = document.querySelector('canvas')
 canvas.focus()
 

@@ -1,5 +1,6 @@
 import Vector from './Vector'
 import KeyState from './world/KeyState'
+import MouseState from './world/MouseState'
 import {
   GenerationalIndexAllocator,
   GenerationalIndexArray,
@@ -11,7 +12,7 @@ const worldStructure = {
   allocator: GenerationalIndexAllocator.new(),
   entities: [], // gi
 
-  _system: { keyState: KeyState.new() },
+  _system: { keyState: KeyState.new(), mouseState: MouseState.new() },
   _initialValues: GenerationalIndexArray.new(),
 
   position: GenerationalIndexArray.new(), // x, y

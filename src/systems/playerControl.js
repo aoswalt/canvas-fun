@@ -1,4 +1,3 @@
-import { mouseDown, position as mousePosition } from '../mouse'
 import Vector from '../Vector'
 import { setupSystem } from '../systems'
 import { setValue } from '../world'
@@ -7,8 +6,8 @@ import produce from 'immer'
 
 const getMove = ({ position, velocity, forces }, world) => {
   // only adding a force, but direct pos, etc. manipulation would be more stable
-  if(mouseDown()) {
-    const positionReset = Vector.subtract(mousePosition(), position)
+  if(world._system.mouseState.buttons[0].isDown) {
+    const positionReset = Vector.subtract(world._system.mouseState.position, position)
     const forcesReset = Vector.scale(Vector.add(...forces), -1)
     const velocityReset = Vector.scale(velocity, -1)
 

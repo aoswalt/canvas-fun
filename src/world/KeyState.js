@@ -1,4 +1,5 @@
 import { canvasElement } from '../canvas'
+import produce from 'immer'
 
 const keysDown = new Set()
 
@@ -9,8 +10,6 @@ canvasElement().addEventListener('keydown', ({ key }) => {
 canvasElement().addEventListener('keyup', ({ key }) => {
   keysDown.delete(key)
 })
-
-export const _isKeyDown = k => keysDown.has(k)
 
 export const keys = {
   UP: 'ArrowUp',
@@ -56,3 +55,20 @@ KeyState.isKeyHeld = (world, k, count = 5) =>
 
 KeyState.onKeyHold = (world, k, count = 5) =>
   isKeyDown(world, k) && world._system.keyState[k].downCount === count
+
+KeyState.update = produce(ks =>
+  Object.values(keys).forEach(k => {
+    const kState = ks[k]
+
+    const isDown = keysDown.has(k)
+    const wasDown = kState.isDown
+
+    kState.wasDown = wasDown
+    kState.isDown = isDown
+
+    if(isDown && wasDown) {
+      kState.downCount++
+    } else {
+      kState.downCount = 0
+    }
+  }))

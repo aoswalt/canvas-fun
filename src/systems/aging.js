@@ -1,11 +1,7 @@
 import Vector from '../Vector'
-import {
-  GenerationalIndexAllocator,
-  GenerationalIndexArray,
-} from '../generationalIndexing'
 import { setupSystem } from '../systems'
 import pipe from '../pipe'
-import { deallocate } from '../world'
+import World from '../World'
 import produce from 'immer'
 
 const growOlder = ({ age }, gi, world, setValue) => {
@@ -16,13 +12,13 @@ const aging = setupSystem(['age'], growOlder)
 
 const expiration = world => {
   const expired = world.entities
-    .filter(gi => GenerationalIndexAllocator.isAlive(world.allocator, gi))
+    .filter(gi => World.isAlive(world, gi))
     .filter(gi => {
-      const age = GenerationalIndexArray.get(world.age, gi)
+      const age = World.get(world, 'age', gi)
       return age && age.current > age.lifespan
     })
     .forEach(gi => {
-      deallocate(world, gi)
+      World.deallocate(world, gi)
     })
 }
 

@@ -1,6 +1,6 @@
 import Vector from './Vector'
-import KeyState from './world/KeyState'
-import MouseState from './world/MouseState'
+import KeyState from './World/KeyState'
+import MouseState from './World/MouseState'
 import {
   GenerationalIndexAllocator,
   GenerationalIndexArray,
@@ -47,24 +47,41 @@ export const ball = {
   age: { current: 0, lifespan: 200 },
 }
 
-export const spawn = (world, skeleton) => {
+export default class World {}
+
+World.isAlive = (world, gi) =>
+  GenerationalIndexAllocator.isAlive(world.allocator, gi)
+
+World.get = (world, component, gi) =>
+  GenerationalIndexArray.get(world[component], gi)
+
+World.deallocate = (world, gi) =>
+  GenerationalIndexAllocator.deallocate(world.allocator, gi)
+
+World.spawn = (world, skeleton) => {
   const genIndex = GenerationalIndexAllocator.allocate(world.allocator)
 
   world.entities[genIndex.index] = genIndex
 
-  updateWorld(world, [genIndex, { ...skeleton, _initialValues: skeleton }])
+  World.update(world, [genIndex, { ...skeleton, _initialValues: skeleton }])
 }
 
-export const init = () =>
-  produce(worldStructure, structure => spawn(structure, ball))
+World.new = () =>
+  produce(worldStructure, structure => World.spawn(structure, ball))
 
-export const updateWorld = (world, [gi, entityUpdate]) => {
+World.update = (world, [gi, entityUpdate]) => {
   Object.entries(entityUpdate).forEach(([component, update]) =>
     GenerationalIndexArray.set(world[component], gi, update),
   )
 }
 
-export const setValue = (world, key, gi, value) =>
-  GenerationalIndexArray.set(world[key], gi, value)
-export const deallocate = (world, gi) =>
-  GenerationalIndexAllocator.deallocate(world.allocator, gi)
+World.setValue = (world, component, gi, value) =>
+  GenerationalIndexArray.set(world[component], gi, value)
+
+World.getMouseState = world => world._system.mouseState
+
+World.setMouseState = (world, ms) => (world._system.mouseState = ms)
+
+World.getKeyState = world => world._system.keyState
+
+World.setKeyState = (world, ks) => (world._system.keyState = ks)

@@ -11,7 +11,7 @@ canvasElement().addEventListener('keyup', ({ key }) => {
   keysDown.delete(key)
 })
 
-export const keys = {
+const keys = {
   UP: 'ArrowUp',
   DOWN: 'ArrowDown',
   LEFT: 'ArrowLeft',
@@ -38,23 +38,25 @@ KeyState.new = () =>
     {},
   )
 
-KeyState.isKeyDown = (world, k) => world._system.keyState[k].isDown
+KeyState.keys = keys
 
-KeyState.wasKeyDown = (world, k) => world._system.keyState[k].wasDown
+KeyState.isKeyDown = (kState, k) => kState[k].isDown
 
-KeyState.anyKeysDown = (world, ks) => ks.any(k => KeyState.isKeyDown(world, k))
+KeyState.wasKeyDown = (kState, k) => kState[k].wasDown
 
-KeyState.allKeysDown = (world, ks) =>
-  ks.every(k => KeyState.isKeyDown(world, k))
+KeyState.anyKeysDown = (kState, ks) => ks.any(k => KeyState.isKeyDown(kState, k))
 
-KeyState.onKeyPress = (world, k) =>
-  KeyState.isKeyDown(world, k) && !KeyState.wasKeyDown(world, k)
+KeyState.allKeysDown = (kState, ks) =>
+  ks.every(k => KeyState.isKeyDown(kState, k))
 
-KeyState.isKeyHeld = (world, k, count = 5) =>
-  isKeyDown(world, k) && world._system.keyState[k].downCount >= count
+KeyState.onKeyPress = (kState, k) =>
+  KeyState.isKeyDown(kState, k) && !KeyState.wasKeyDown(kState, k)
 
-KeyState.onKeyHold = (world, k, count = 5) =>
-  isKeyDown(world, k) && world._system.keyState[k].downCount === count
+KeyState.isKeyHeld = (kState, k, count = 5) =>
+  isKeyDown(kState, k) && kState[k].downCount >= count
+
+KeyState.onKeyHold = (kState, k, count = 5) =>
+  isKeyDown(kState, k) && kState[k].downCount === count
 
 KeyState.update = produce(ks =>
   Object.values(keys).forEach(k => {

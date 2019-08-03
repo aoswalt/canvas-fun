@@ -1,7 +1,6 @@
 import Vector from '../Vector'
 import { height, width } from '../canvas'
 import { setupSystem } from '../systems'
-import { setValue } from '../world'
 import produce from 'immer'
 
 const bounds = {

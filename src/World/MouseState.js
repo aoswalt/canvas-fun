@@ -23,10 +23,8 @@ canvasElement().addEventListener('mousemove', ({ clientX: x, clientY: y }) => {
 //   mousePosition = Vector.new(x, y)
 // })
 
-export const _currentPosition = () => mousePosition
-
 // NOTE(adam): MDN reports mouse buttons ranging from 0 to 4
-export const buttons = Object.fromEntries(
+const buttons = Object.fromEntries(
   Array.from({ length: 5 }).map((_e, i) => [`MOUSE${i}`, i]),
 )
 
@@ -41,6 +39,8 @@ MouseState.new = () => ({
   position: Vector.new(),
   recentPositions: [],
 })
+
+MouseState.buttons = buttons
 
 MouseState.update = produce(ms => {
   Object.values(buttons).forEach(b => {
@@ -67,3 +67,7 @@ MouseState.update = produce(ms => {
     ms.recentPositions.shift()
   }
 })
+
+MouseState.getPosition = ms => ms.position
+
+MouseState.isButtonDown = (ms, b) => ms.buttons[b].isDown

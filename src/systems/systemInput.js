@@ -1,5 +1,5 @@
-import KeyState from '../world/KeyState'
-import MouseState from '../world/MouseState'
+import KeyState from '../World/KeyState'
+import MouseState from '../World/MouseState'
 
 export default world => {
   world._system.keyState = KeyState.update(world._system.keyState)

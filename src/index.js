@@ -1,5 +1,5 @@
 import { clear } from './canvas'
-import { init as initWorld } from './world'
+import World from './World'
 import systemInput from './systems/systemInput'
 import aging from './systems/aging'
 import bodyAging from './systems/bodyAging'
@@ -10,7 +10,7 @@ import physics from './systems/physics'
 import displayAging from './systems/displayAging'
 import draw from './systems/draw'
 import simpleSpawner from './systems/simpleSpawner'
-import produce, { original } from 'immer'
+import produce from 'immer'
 
 const systems = [
   systemInput,
@@ -35,6 +35,6 @@ const run = world => {
   requestAnimationFrame(() => run(updatedWorld))
 }
 
-const world = initWorld()
+const world = World.new()
 
 run(world)

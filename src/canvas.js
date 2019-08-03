@@ -11,13 +11,13 @@ export const context = () => ctx
 export const width = () => canvas.width
 export const height = () => canvas.height
 
-export const resize = (newWidth, newHeight) => {
-  canvas.width = newWidth
-  canvas.height = newHeight
-}
-
 export const clear = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
+}
+
+const resize = (newWidth, newHeight) => {
+  canvas.width = newWidth
+  canvas.height = newHeight
 }
 
 const makeFullscreen = () =>

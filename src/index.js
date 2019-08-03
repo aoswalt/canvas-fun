@@ -11,6 +11,7 @@ import displayAging from './systems/displayAging'
 import draw from './systems/draw'
 import simpleSpawner from './systems/simpleSpawner'
 import produce from 'immer'
+import Ball from './entities/Ball'
 
 const systems = [
   systemInput,
@@ -35,6 +36,6 @@ const run = world => {
   requestAnimationFrame(() => run(updatedWorld))
 }
 
-const world = World.new()
+const world = World.new([Ball.new()])
 
 run(world)

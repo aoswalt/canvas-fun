@@ -5,7 +5,6 @@ import {
   GenerationalIndexAllocator,
   GenerationalIndexArray,
 } from './generationalIndexing'
-import { blue, red } from './draw'
 import produce from 'immer'
 
 const worldStructure = {
@@ -24,27 +23,6 @@ const worldStructure = {
   forces: GenerationalIndexArray.new(), // [{ x, y }]
   display: GenerationalIndexArray.new(), // color
   age: GenerationalIndexArray.new(), // current, lifespan
-}
-
-export const ball = {
-  position: Vector.new(200, 200),
-  velocity: Vector.new(5, 5),
-  body: {
-    type: 'circle',
-    radius: 50,
-    elasticity: 0.8,
-    friction: 0.02,
-    aging: { type: 'pulse', amount: 0.25, speed: 0.5 },
-  },
-  gravity: 1,
-  input: {},
-  player: {},
-  forces: [],
-  display: {
-    color: blue(),
-    aging: { type: 'color_cycle', color: red(), speed: 0.5 },
-  },
-  age: { current: 0, lifespan: 200 },
 }
 
 export default class World {}
@@ -66,8 +44,10 @@ World.spawn = (world, skeleton) => {
   World.update(world, [genIndex, { ...skeleton, _initialValues: skeleton }])
 }
 
-World.new = () =>
-  produce(worldStructure, structure => World.spawn(structure, ball))
+World.new = (entities = []) =>
+  produce(worldStructure, structure =>
+    entities.forEach(e => World.spawn(structure, e)),
+  )
 
 World.update = (world, [gi, entityUpdate]) => {
   Object.entries(entityUpdate).forEach(([component, update]) =>

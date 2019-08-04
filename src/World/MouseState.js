@@ -70,4 +70,11 @@ MouseState.update = produce(ms => {
 
 MouseState.getPosition = ms => ms.position
 
+MouseState.getMotion = ms => {
+  const first = ms.recentPositions[0]
+  const last = ms.recentPositions[ms.recentPositions.length - 1]
+
+  return Vector.subtract(last, first)
+}
+
 MouseState.isButtonDown = (ms, b) => ms.buttons[b].isDown
